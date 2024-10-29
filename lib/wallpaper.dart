@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:wallpaper_app/image_screen.dart';
 
 class Wallpaper extends StatefulWidget {
   const Wallpaper({super.key});
@@ -66,11 +67,20 @@ class _WallpaperState extends State<Wallpaper> {
                 mainAxisSpacing: 2,
               ),
               itemBuilder: (context, index) {
-                return Container(
-                  color: Colors.white,
-                  child: Image.network(
-                    _images[index]['src']['tiny'],
-                    fit: BoxFit.cover,
+                return InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ImageScreen(
+                        imageUrl: _images[index]['src']['large2x'],
+                      ),
+                    ));
+                  },
+                  child: Container(
+                    color: Colors.grey,
+                    child: Image.network(
+                      _images[index]['src']['tiny'],
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 );
               },
