@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -5,29 +7,50 @@ import 'package:http/http.dart' as http;
 class Wallpaper extends StatefulWidget {
   const Wallpaper({super.key});
 
-  fetchApi() async {
-    await http.get(Uri.parse('https://api.pexels.com/v1/curated?per_page=80'),
-        headers: {
-          'Authorization': dotenv.env['PEXEL_API_KEY']!,
-        }).then(
-      (value) {
-        print('------------------');
-        print(value);
-        print('------------------');
-      },
-    );
-  }
-
   @override
   State<Wallpaper> createState() => _WallpaperState();
 }
 
 class _WallpaperState extends State<Wallpaper> {
+  final List _images = [];
+  int _page = 1;
+
   @override
   void initState() {
     super.initState();
-    
+    _fetchApi();
   }
+
+  void _fetchApi() async {
+    await http.get(Uri.parse('https://api.pexels.com/v1/curated?per_page=80'),
+        headers: {
+          'Authorization': dotenv.env['PEXEL_API_KEY']!,
+        }).then(
+      (value) {
+        Map result = jsonDecode(value.body);
+        setState(() {
+          List photos = result['photos'];
+          _images.addAll(photos);
+        });
+      },
+    );
+  }
+
+  void _loadMore() {
+    _page++;
+
+    String url = 'https://api.pexels.com/v1/curated?per_page=80&page=$_page';
+    http.get(Uri.parse(url), headers: {
+      'Authorization': dotenv.env['PEXEL_API_KEY']!,
+    }).then((value) {
+      Map result = jsonDecode(value.body);
+      setState(() {
+        List photos = result['photos'];
+        _images.addAll(photos);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +58,7 @@ class _WallpaperState extends State<Wallpaper> {
         children: [
           Expanded(
             child: GridView.builder(
-              itemCount: 80,
+              itemCount: _images.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 crossAxisSpacing: 2,
@@ -45,6 +68,10 @@ class _WallpaperState extends State<Wallpaper> {
               itemBuilder: (context, index) {
                 return Container(
                   color: Colors.white,
+                  child: Image.network(
+                    _images[index]['src']['tiny'],
+                    fit: BoxFit.cover,
+                  ),
                 );
               },
             ),
@@ -53,12 +80,17 @@ class _WallpaperState extends State<Wallpaper> {
             height: 60,
             width: double.infinity,
             color: Colors.black,
-            child: const Center(
-              child: Text(
-                'Load more',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
+            child: Center(
+              child: TextButton(
+                onPressed: () {
+                  _loadMore();
+                },
+                child: const Text(
+                  'Load more',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
