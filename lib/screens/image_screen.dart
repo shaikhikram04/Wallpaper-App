@@ -18,7 +18,27 @@ class _ImageScreenState extends State<ImageScreen> {
   Future<void> setWallpaper() async {
     final location = WallpaperManager.HOME_SCREEN;
     final file = await DefaultCacheManager().getSingleFile(widget.imageUrl);
-    final result = WallpaperManager.setWallpaperFromFile(file.path, location);
+    final result =
+        await WallpaperManager.setWallpaperFromFile(file.path, location);
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    if (result) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Wallpaper set successfully.'),
+          backgroundColor: Colors.grey[800],
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Failed to set wallpaper, please try again.'),
+          backgroundColor: Colors.grey[800],
+        ),
+      );
+    }
   }
 
   @override
