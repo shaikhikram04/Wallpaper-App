@@ -58,51 +58,55 @@ class _WallpaperState extends State<Wallpaper> {
       body: Column(
         children: [
           Expanded(
-            child: GridView.builder(
-              itemCount: _images.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 2,
-                childAspectRatio: 2 / 3,
-                mainAxisSpacing: 2,
-              ),
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ImageScreen(
-                        imageUrl: _images[index]['src']['large2x'],
-                      ),
-                    ));
-                  },
-                  child: Container(
-                    color: Colors.grey,
-                    child: Image.network(
-                      _images[index]['src']['tiny'],
-                      fit: BoxFit.cover,
+            child: CustomScrollView(
+              slivers: [
+                SliverPadding(
+                  padding: const EdgeInsets.all(8.0),
+                  sliver: SliverGrid(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ImageScreen(
+                              imageUrl: _images[index]['src']['large2x'],
+                            ),
+                          ));
+                        },
+                        child: Container(
+                          color: Colors.grey,
+                          child: Image.network(
+                            _images[index]['src']['tiny'],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    }, childCount: _images.length),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 2,
+                      childAspectRatio: 2 / 3,
+                      mainAxisSpacing: 2,
                     ),
                   ),
-                );
-              },
-            ),
-          ),
-          Container(
-            height: 60,
-            width: double.infinity,
-            color: Colors.black,
-            child: Center(
-              child: TextButton(
-                onPressed: () {
-                  _loadMore();
-                },
-                child: const Text(
-                  'Load more',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
+                ),
+                SliverToBoxAdapter(
+                  child: Center(
+                    child: TextButton(
+                      onPressed: () {
+                        _loadMore();
+                      },
+                      child: const Text(
+                        'Load more',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
           ),
         ],

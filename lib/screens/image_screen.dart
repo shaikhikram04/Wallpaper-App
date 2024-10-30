@@ -53,14 +53,14 @@ class _ImageScreenState extends State<ImageScreen> {
               fit: BoxFit.contain,
             ),
           ),
-          Container(
-            height: 60,
-            width: double.infinity,
-            color: Colors.black,
-            child: Center(
-              child: TextButton(
-                onPressed: setWallpaper,
-                child: const Text(
+          InkWell(
+            onTap: setWallpaper,
+            child: Container(
+              height: 60,
+              width: double.infinity,
+              color: Colors.black,
+              child: const Center(
+                child: Text(
                   'Set Wallpaper',
                   style: TextStyle(
                     fontSize: 20,
