@@ -39,7 +39,7 @@ class _ImageScreenState extends State<ImageScreen> {
             color: Colors.black,
             child: Center(
               child: TextButton(
-                onPressed: () {},
+                onPressed: setWallpaper,
                 child: const Text(
                   'Set Wallpaper',
                   style: TextStyle(

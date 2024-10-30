@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:wallpaper_app/wallpaper.dart';
+import 'package:wallpaper_app/screens/wallpaper.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");

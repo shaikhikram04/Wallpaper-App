@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:wallpaper_app/image_screen.dart';
+import 'package:wallpaper_app/screens/image_screen.dart';
 
 class Wallpaper extends StatefulWidget {
   const Wallpaper({super.key});
