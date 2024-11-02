@@ -63,24 +63,27 @@ class _WallpaperState extends State<Wallpaper> {
                 SliverPadding(
                   padding: const EdgeInsets.all(8.0),
                   sliver: SliverGrid(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ImageScreen(
-                              imageUrl: _images[index]['src']['large2x'],
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => ImageScreen(
+                                imageUrl: _images[index]['src']['large2x'],
+                              ),
+                            ));
+                          },
+                          child: Container(
+                            color: Colors.grey,
+                            child: Image.network(
+                              _images[index]['src']['tiny'],
+                              fit: BoxFit.cover,
                             ),
-                          ));
-                        },
-                        child: Container(
-                          color: Colors.grey,
-                          child: Image.network(
-                            _images[index]['src']['tiny'],
-                            fit: BoxFit.cover,
                           ),
-                        ),
-                      );
-                    }, childCount: _images.length),
+                        );
+                      },
+                      childCount: _images.length,
+                    ),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
