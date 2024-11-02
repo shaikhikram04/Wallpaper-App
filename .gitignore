@@ -30,15 +30,6 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-android/
-ios/
-linux
-macos/
-test/
-web/
-windows/
-analysis_options.yaml
-*.lock
 *.env
 
 # Symbolication related
