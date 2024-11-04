@@ -82,7 +82,7 @@ jobs:
           # Then add the MaterialApp properties
           sed -i 's/MaterialApp(/MaterialApp(\n        locale: DevicePreview.locale(context),\n        builder: DevicePreview.appBuilder,/g' lib/app.dart
 
-      - name: Build Web --base-href "/Flutter_ticket_app/"
+      - name: Build Web --base-href "/Wallpaper-App/"
         run: flutter build web
 
       - name: Restore original files
