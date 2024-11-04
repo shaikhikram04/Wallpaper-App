@@ -31,6 +31,13 @@ migrate_working_dir/
 .pub/
 /build/
 *.env
+android
+ios
+linux
+macos
+test
+windows
+pubspec.lock
 
 # Symbolication related
 app.*.symbols
