@@ -27355,6 +27355,7 @@ b7:function b7(a){this.a=a},
 nn:function nn(a){this.a=a},
 en:function en(a){this.a=a},
 jn:function jn(a){this.a=a},
+uc:function uc(a){this.a=a},
 aCE(){var s=0,r=A.N(t.H),q,p,o,n,m,l,k,j,i,h
 var $async$aCE=A.I(function(a,b){if(a===1)return A.K(b,r)
 while(true)switch(s){case 0:s=2
@@ -27389,7 +27390,6 @@ p.KC()
 return A.L(null,r)}})
 return A.M($async$aCE,r)},
 aCH:function aCH(){},
-uc:function uc(a){this.a=a},
 py:function py(a,b){this.c=a
 this.a=b},
 EZ:function EZ(){this.c=this.a=null},
@@ -94872,12 +94872,12 @@ s[0]=s[0]*b
 s[1]=s[1]*b
 s[2]=s[2]*b
 s[3]=s[3]*b}}
-A.aCH.prototype={
-$1(a){return B.a_8},
-$S:585}
 A.uc.prototype={
 U(a){var s=A.aUa(a)
 return new A.Ap(B.ajq,A.b2O(),"Wallpaper App",A.kf(B.a9,null,null),s,!1,null)}}
+A.aCH.prototype={
+$1(a){return B.a_8},
+$S:585}
 A.py.prototype={
 aG(){return new A.EZ()}}
 A.EZ.prototype={
