@@ -41,7 +41,7 @@ class _WallpaperState extends State<Wallpaper> {
   void _fetchSearchApi(String query) async {
     query = query.trim().toLowerCase();
     http.get(
-        Uri.parse('https://api.pexels.com/v1/search?query=$query&per_page=40'),
+        Uri.parse('https://api.pexels.com/v1/search?query=$query&per_page=80'),
         headers: {
           'Authorization': dotenv.env['PEXEL_API_KEY']!,
         }).then(
@@ -77,34 +77,31 @@ class _WallpaperState extends State<Wallpaper> {
       body: SafeArea(
         child: Column(
           children: [
+            SearchAnchor(
+              builder: (BuildContext context, SearchController controller) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 5,
+                  ),
+                  child: SearchBar(
+                    leading: const Icon(Icons.search),
+                    hintText: 'Search',
+                    textStyle: const WidgetStatePropertyAll(
+                      TextStyle(fontSize: 21),
+                    ),
+                    onSubmitted: _fetchSearchApi,
+                  ),
+                );
+              },
+              suggestionsBuilder:
+                  (BuildContext context, SearchController controller) {
+                return [];
+              },
+            ),
             Expanded(
               child: CustomScrollView(
                 slivers: [
-                  SliverToBoxAdapter(
-                    child: SearchAnchor(
-                      builder:
-                          (BuildContext context, SearchController controller) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 5,
-                          ),
-                          child: SearchBar(
-                            leading: const Icon(Icons.search),
-                            hintText: 'Search',
-                            textStyle: const WidgetStatePropertyAll(
-                              TextStyle(fontSize: 21),
-                            ),
-                            onSubmitted: _fetchSearchApi,
-                          ),
-                        );
-                      },
-                      suggestionsBuilder:
-                          (BuildContext context, SearchController controller) {
-                        return [];
-                      },
-                    ),
-                  ),
                   SliverPadding(
                     padding: const EdgeInsets.all(5),
                     sliver: SliverGrid(
