@@ -14,49 +14,27 @@ Future<void> main() async {
       availableLocales: const [Locale('en', 'US')],
       tools: const [
         DeviceSection(
-          model: true, // Option to change device model to fit your needs
-          orientation: false, // Lock to portrait for consistent demo
-          frameVisibility: false, // Hide frame options
-          virtualKeyboard: false, // Hide keyboard
+          model: true,
+          orientation: false,
+          frameVisibility: false,
+          virtualKeyboard: false,
         ),
-
-        // Theme switching section
-        // SystemSection(
-        //   locale: false, // Hide language options - we're keeping it English only
-        //   theme: false, // Show theme switcher if your app has dark/light modes
-        // ),
-
-        // Disable accessibility for demo simplicity
-        // AccessibilitySection(
-        //   boldText: false,
-        //   invertColors: false,
-        //   textScalingFactor: false,
-        //   accessibleNavigation: false,
-        // ),
-
-        // Hide extra settings to keep demo focused
-        // SettingsSection(
-        //   backgroundTheme: false,
-        //   toolsTheme: false,
-        // ),
       ],
       devices: [
-        Devices.android.samsungGalaxyA50, // Mid-range
-        Devices.android.samsungGalaxyNote20, // Large screen
-        Devices.android.samsungGalaxyS20, // Flagship
-        Devices.android.samsungGalaxyNote20Ultra, // Premium
-        Devices.android.onePlus8Pro, // Different aspect ratio
-        Devices.android.sonyXperia1II, // Tall screen
-
-        // Popular iOS Devices
-        Devices.ios.iPhoneSE, // Small screen
-        Devices.ios.iPhone12, // Standard size
-        Devices.ios.iPhone12Mini, // Compact
-        Devices.ios.iPhone12ProMax, // Large
-        Devices.ios.iPhone13, // Latest standard
-        Devices.ios.iPhone13ProMax, // Latest large
-        Devices.ios.iPhone13Mini, // Latest compact
-        Devices.ios.iPhoneSE, // Budget option
+        Devices.android.samsungGalaxyA50,
+        Devices.android.samsungGalaxyNote20,
+        Devices.android.samsungGalaxyS20,
+        Devices.android.samsungGalaxyNote20Ultra,
+        Devices.android.onePlus8Pro,
+        Devices.android.sonyXperia1II,
+        Devices.ios.iPhoneSE,
+        Devices.ios.iPhone12,
+        Devices.ios.iPhone12Mini,
+        Devices.ios.iPhone12ProMax,
+        Devices.ios.iPhone13,
+        Devices.ios.iPhone13ProMax,
+        Devices.ios.iPhone13Mini,
+        Devices.ios.iPhoneSE,
       ],
       builder: (context) => const MyApp(),
     ),

@@ -1,39 +1,104 @@
-name: Deploy to GitHub Pages
+name: Flutter Web Preview Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Flutter
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
-      
-      - name: Enable Flutter Web
-        run: flutter config --enable-web
-        
-      - name: Get dependencies
+          flutter-version: "3.24.4"
+          channel: "stable"
+
+      - name: Install dependencies
         run: flutter pub get
-        
-      - name: Build Web
-        run: flutter build web --release --base-href /Wallpaper-App/
-        
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web
-          force_orphan: true
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Backup original files
+        run: |
+          cp lib/main.dart lib/main.dart.bak
+
+      - name: Update main.dart for web build
+        run: |
+          cat > lib/main.dart << 'EOL'
+          import 'package:device_preview/device_preview.dart';
+          import 'package:flutter/material.dart';
+          import 'package:flutter_dotenv/flutter_dotenv.dart';
+          import 'package:wallpaper_app/screens/wallpaper.dart';
+
+          void main() {
+            runApp(
+              DevicePreview(
+                backgroundColor: Colors.white,
+                enabled: true,
+                defaultDevice: Devices.ios.iPhone13ProMax,
+                isToolbarVisible: true,
+                availableLocales: [Locale('en', 'US')],
+                tools: const [
+                  DeviceSection(
+                    model: true,
+                    orientation: false,
+                    frameVisibility: false,
+                    virtualKeyboard: false,
+                  ),
+                ],
+                devices: [
+                  Devices.android.samsungGalaxyA50,
+                  Devices.android.samsungGalaxyNote20,
+                  Devices.android.samsungGalaxyS20,
+                  Devices.android.samsungGalaxyNote20Ultra,
+                  Devices.android.onePlus8Pro,
+                  Devices.android.sonyXperia1II,
+                  Devices.ios.iPhoneSE,
+                  Devices.ios.iPhone12,
+                  Devices.ios.iPhone12Mini,
+                  Devices.ios.iPhone12ProMax,
+                  Devices.ios.iPhone13,
+                  Devices.ios.iPhone13ProMax,
+                  Devices.ios.iPhone13Mini,
+                  Devices.ios.iPhoneSE,
+                ],
+                builder: (context) => const MyApp(),
+              ),
+            );
+          }
+          EOL
+
+      - name: Update main.dart for web build
+        run: |
+          # First add the import at the top of the file
+          sed -i '1i import '"'"'package:device_preview/device_preview.dart'"'"';' lib/main.dart
+          # Then add the MaterialApp properties
+          sed -i 's/MaterialApp(/MaterialApp(\n        locale: DevicePreview.locale(context),\n        builder: DevicePreview.appBuilder,/g' lib/main.dart
+
+      - name: Build Web --base-href "/Wallpaper-App/"
+        run: flutter build web
+
+      - name: Restore original files
+        run: |
+          mv lib/main.dart.bak lib/main.dart
+          
+      - name: Copy build files to docs
+        run: |
+          rm -rf docs
+          mkdir -p docs
+          cp -r build/web/. docs/
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git add docs
+          git commit -m "Update web build" || echo "No changes to commit"
+          git push
