@@ -35,7 +35,7 @@ jobs:
           import 'package:device_preview/device_preview.dart';
           import 'package:flutter/material.dart';
           import 'package:flutter_dotenv/flutter_dotenv.dart';
-          import 'package:wallpaper_app/screens/wallpaper.dart';
+          import 'package:wallpaper_app/app.dart';
 
           void main() {
             runApp(
@@ -75,20 +75,21 @@ jobs:
           }
           EOL
 
-      - name: Update main.dart for web build
+      - name: Update app.dart for web build
         run: |
           # First add the import at the top of the file
-          sed -i '1i import '"'"'package:device_preview/device_preview.dart'"'"';' lib/main.dart
+          sed -i '1i import '"'"'package:device_preview/device_preview.dart'"'"';' lib/app.dart
           # Then add the MaterialApp properties
-          sed -i 's/MaterialApp(/MaterialApp(\n        locale: DevicePreview.locale(context),\n        builder: DevicePreview.appBuilder,/g' lib/main.dart
+          sed -i 's/MaterialApp(/MaterialApp(\n        locale: DevicePreview.locale(context),\n        builder: DevicePreview.appBuilder,/g' lib/app.dart
 
-      - name: Build Web --base-href "/Wallpaper-App/"
+      - name: Build Web --base-href "/Flutter_ticket_app/"
         run: flutter build web
 
       - name: Restore original files
         run: |
           mv lib/main.dart.bak lib/main.dart
-          
+          mv lib/app.dart.bak lib/app.dart
+
       - name: Copy build files to docs
         run: |
           rm -rf docs
