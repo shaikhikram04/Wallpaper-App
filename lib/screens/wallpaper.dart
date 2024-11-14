@@ -25,9 +25,7 @@ class _WallpaperState extends State<Wallpaper> {
   }
 
   void _fetchApi() async {
-    _images.add(
-      'https://images.unsplash.com/photo-1727775447812-117baa795bcf?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw5fHx8ZW58MHx8fHx8',
-    );
+    _images.add(dotenv.env['PEXEL_API_KEY']!);
 
     try {
       await http.get(Uri.parse('https://api.pexels.com/v1/curated?per_page=80'),
@@ -117,6 +115,11 @@ class _WallpaperState extends State<Wallpaper> {
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Text("_images length -> ${_images.length}"),
             ),
+            for (final i in _images)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                child: Text("_images info -> $i"),
+              ),
             Expanded(
               child: CustomScrollView(
                 slivers: [
