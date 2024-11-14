@@ -113,6 +113,10 @@ class _WallpaperState extends State<Wallpaper> {
                 return [];
               },
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Text("_images length -> ${_images.length}"),
+            ),
             Expanded(
               child: CustomScrollView(
                 slivers: [
