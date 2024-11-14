@@ -1,10 +1,20 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:wallpaper_app/screens/wallpaper.dart';
 
 Future<void> main() async {
-  await dotenv.load(fileName: ".env");
+  WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    if (kDebugMode) {
+      print("Error loading .env file: $e");
+    }
+  }
+
   runApp(
     DevicePreview(
       backgroundColor: Colors.white,
@@ -51,7 +61,7 @@ class MyApp extends StatelessWidget {
       locale: DevicePreview.locale(context), // add this line
       builder: DevicePreview.appBuilder, // add this line
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(brightness: Brightness.dark),
+      theme: ThemeData.dark(),
       home: const Wallpaper(),
     );
   }
