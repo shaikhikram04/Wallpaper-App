@@ -25,6 +25,7 @@ class _WallpaperState extends State<Wallpaper> {
   }
 
   void _fetchApi() async {
+    print(dotenv.env['PEXEL_API_KEY']!);
     try {
       await http.get(Uri.parse('https://api.pexels.com/v1/curated?per_page=80'),
           headers: {
@@ -106,6 +107,7 @@ class _WallpaperState extends State<Wallpaper> {
                 return [];
               },
             ),
+            Text(dotenv.env['PEXEL_API_KEY']!.toString()),
             Expanded(
               child: CustomScrollView(
                 slivers: [
