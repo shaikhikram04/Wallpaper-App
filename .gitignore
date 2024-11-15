@@ -37,6 +37,7 @@ linux
 macos
 test
 windows
+analysis_options.yaml
 pubspec.lock
 
 # Symbolication related
