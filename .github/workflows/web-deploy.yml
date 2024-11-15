@@ -3,12 +3,11 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
       - uses: actions/checkout@v2
@@ -16,9 +15,12 @@ jobs:
         with:
           flutter-version: '3.x.x'
           channel: 'stable'
-      
+
       - name: Enable Flutter Web
         run: flutter config --enable-web
+
+      - name: Clean Flutter
+        run: flutter clean
         
       - name: Get dependencies
         run: flutter pub get
@@ -35,4 +37,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web          
+          publish_dir: ./build/web
+          force_orphan: true
+          keep_files: false
