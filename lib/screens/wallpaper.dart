@@ -39,7 +39,6 @@ class _WallpaperState extends State<Wallpaper> {
         },
       );
     } catch (e) {
-
       if (kDebugMode) {
         print(e.toString());
       }
@@ -128,12 +127,13 @@ class _WallpaperState extends State<Wallpaper> {
                             },
                             child: Container(
                               color: Colors.grey,
-                              child: Image.network(
-                                _searchedImages.isEmpty
-                                    ? _images[index]['src']['tiny']
-                                    : _searchedImages[index]['src']['tiny'],
-                                fit: BoxFit.cover,
-                              ),
+                              child: Text(index.toString()),
+                              // Image.network(
+                              //   _searchedImages.isEmpty
+                              //       ? _images[index]['src']['tiny']
+                              //       : _searchedImages[index]['src']['tiny'],
+                              //   fit: BoxFit.cover,
+                              // ),
                             ),
                           );
                         },
