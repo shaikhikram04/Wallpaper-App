@@ -13,8 +13,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v2
+      - uses: actions/checkout@v3
+        with:
+            fetch-depth: 0
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.x.x'
           channel: 'stable'
@@ -34,7 +38,12 @@ jobs:
           cat .env
         
       - name: Build Web
-        run: flutter build web --release --base-href /Wallpaper-App/
+        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+
+      - name: Upload Artifacts
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: './build/web'
         
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
@@ -42,3 +51,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/web
           force_orphan: true
+          cname: ${{ github.event.repository.name }}.github.io
