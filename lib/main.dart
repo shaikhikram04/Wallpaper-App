@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Wallpaper App',
       locale: DevicePreview.locale(context), // add this line
-      builder: DevicePreview.appBuilder, // add this  line
+      builder: DevicePreview.appBuilder, //  add this  line
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
       home: const Wallpaper(),
