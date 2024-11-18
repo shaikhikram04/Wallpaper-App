@@ -84,27 +84,35 @@ class _WallpaperState extends State<Wallpaper> {
       body: SafeArea(
         child: Column(
           children: [
-            SearchAnchor(
-              builder: (BuildContext context, SearchController controller) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 5,
-                  ),
-                  child: SearchBar(
-                    leading: const Icon(Icons.search),
-                    hintText: 'Search',
-                    textStyle: const WidgetStatePropertyAll(
-                      TextStyle(fontSize: 21),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
+                      onSubmitted: _fetchSearchApi,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[800],
+                        hintText: 'Search',
+                        hintStyle: TextStyle(color: Colors.grey[300]),
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(25)),
+                          borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                    onSubmitted: _fetchSearchApi,
                   ),
-                );
-              },
-              suggestionsBuilder:
-                  (BuildContext context, SearchController controller) {
-                return [];
-              },
+                ],
+              ),
             ),
             Expanded(
               child: CustomScrollView(
