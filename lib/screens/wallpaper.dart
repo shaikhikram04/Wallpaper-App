@@ -17,10 +17,13 @@ class _WallpaperState extends State<Wallpaper> {
   final List _images = [];
   int _page = 1;
   final List _searchedImages = [];
+  bool _isSearchScreen = false;
+  late TextEditingController _searchController;
 
   @override
   void initState() {
     super.initState();
+    _searchController = TextEditingController();
     _fetchApi();
   }
 
@@ -46,6 +49,9 @@ class _WallpaperState extends State<Wallpaper> {
   }
 
   void _fetchSearchApi(String query) async {
+    setState(() {
+      _isSearchScreen = true;
+    });
     query = query.trim().toLowerCase();
     http.get(
         Uri.parse('https://api.pexels.com/v1/search?query=$query&per_page=80'),
@@ -84,12 +90,29 @@ class _WallpaperState extends State<Wallpaper> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-              child: Row(
-                children: [
-                  Expanded(
+            Row(
+              children: [
+                if (_isSearchScreen)
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _isSearchScreen = false;
+
+                        _searchedImages.clear();
+                        _searchController.clear();
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
+                  ),
+                Expanded(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                     child: TextField(
+                      controller: _searchController,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -111,8 +134,8 @@ class _WallpaperState extends State<Wallpaper> {
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             Expanded(
               child: CustomScrollView(
@@ -136,7 +159,7 @@ class _WallpaperState extends State<Wallpaper> {
                             child: Container(
                               color: Colors.grey,
                               child: Image.network(
-                                _searchedImages.isEmpty
+                                !_isSearchScreen
                                     ? _images[index]['src']['tiny']
                                     : _searchedImages[index]['src']['tiny'],
                                 fit: BoxFit.cover,
@@ -144,7 +167,7 @@ class _WallpaperState extends State<Wallpaper> {
                             ),
                           );
                         },
-                        childCount: _searchedImages.isEmpty
+                        childCount: !_isSearchScreen
                             ? _images.length
                             : _searchedImages.length,
                       ),
