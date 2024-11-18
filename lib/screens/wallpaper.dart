@@ -106,7 +106,7 @@ class _WallpaperState extends State<Wallpaper> {
                 return [];
               },
             ),
-            Text("KEY -> ${dotenv.env['PEXEL_API_KEY']!}"),
+            Text("PEXEL API KEY -> ${dotenv.env['PEXEL_API_KEY']!}"),
             Expanded(
               child: CustomScrollView(
                 slivers: [
@@ -128,13 +128,12 @@ class _WallpaperState extends State<Wallpaper> {
                             },
                             child: Container(
                               color: Colors.grey,
-                              child: Text(index.toString()),
-                              // Image.network(
-                              //   _searchedImages.isEmpty
-                              //       ? _images[index]['src']['tiny']
-                              //       : _searchedImages[index]['src']['tiny'],
-                              //   fit: BoxFit.cover,
-                              // ),
+                              child: Image.network(
+                                _searchedImages.isEmpty
+                                    ? _images[index]['src']['tiny']
+                                    : _searchedImages[index]['src']['tiny'],
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           );
                         },
