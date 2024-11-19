@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';
+import 'package:wallpaper_app/widgets/bottom_button.dart';
 
 class ImageScreen extends StatefulWidget {
   const ImageScreen({
@@ -53,22 +54,15 @@ class _ImageScreenState extends State<ImageScreen> {
               fit: BoxFit.contain,
             ),
           ),
-          InkWell(
-            onTap: setWallpaper,
-            child: Container(
-              height: 60,
-              width: double.infinity,
-              color: Colors.black,
-              child: const Center(
-                child: Text(
-                  'Set Wallpaper',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
+          Row(
+            children: [
+              Expanded(
+                child: BottomButton(
+                  onTap: setWallpaper,
+                  text: 'Set Wallpaper',
                 ),
               ),
-            ),
+            ],
           ),
         ],
       ),
