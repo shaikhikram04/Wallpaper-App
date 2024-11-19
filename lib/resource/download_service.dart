@@ -15,7 +15,7 @@ class DownloadService {
 
       if (kIsWeb) {
         // Web download implementation
-        _downloadWeb(imageBytes, _extractFileName(imageUrl));
+        _downloadWeb(imageBytes, imageUrl);
       } else if (Platform.isAndroid || Platform.isIOS) {
         // Mobile download implementation
         await _downloadMobile(imageBytes, _extractFileName(imageUrl));
@@ -27,11 +27,8 @@ class DownloadService {
   }
 
   void _downloadWeb(Uint8List bytes, String fileName) {
-    // Create blob and trigger download for web
-    final blob = html.Blob([bytes]);
-    final url = html.Url.createObjectUrlFromBlob(blob);
-    html.AnchorElement(href: url)
-      ..setAttribute('download', fileName)
+    html.AnchorElement(href: fileName)
+      ..download = "image.jpg"
       ..click();
   }
 

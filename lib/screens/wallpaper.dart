@@ -47,7 +47,7 @@ class _WallpaperState extends State<Wallpaper> {
           });
         },
       );
-    } catch (e) {
+    }   catch (e) {
       if (kDebugMode) {
         print(e.toString());
       }
