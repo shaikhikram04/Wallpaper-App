@@ -30,10 +30,9 @@ class DownloadService {
     // Create blob and trigger download for web
     final blob = html.Blob([bytes]);
     final url = html.Url.createObjectUrlFromBlob(blob);
-    final anchor = html.AnchorElement(href: url)
+    html.AnchorElement(href: url)
       ..setAttribute('download', fileName)
       ..click();
-    html.Url.revokeObjectUrl(url);
   }
 
   Future<void> _downloadMobile(Uint8List bytes, String fileName) async {

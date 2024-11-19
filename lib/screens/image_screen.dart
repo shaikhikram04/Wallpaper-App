@@ -63,7 +63,11 @@ class _ImageScreenState extends State<ImageScreen> {
                   text: 'Set Wallpaper',
                 ),
               ),
-              const SizedBox(width: 8),
+              Container(
+                color: Colors.white,
+                width: 1,
+                height: 60,
+              ),
               Expanded(
                   child: BottomButton(
                 onTap: () => DownloadService().downloadImage(widget.imageUrl),

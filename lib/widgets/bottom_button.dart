@@ -13,7 +13,10 @@ class BottomButton extends StatelessWidget {
       child: Container(
         height: 60,
         width: double.infinity,
-        color: Colors.black,
+        decoration: BoxDecoration(
+          color: Colors.black,
+          border: Border.all(color: Colors.grey[900]!),
+        ),
         child: Center(
           child: Text(
             text,
