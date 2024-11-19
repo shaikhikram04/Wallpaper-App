@@ -22,6 +22,7 @@ class _WallpaperState extends State<Wallpaper> {
   late TextEditingController _searchController;
   bool _isLoading = false;
   bool _isLoadingMoreImages = false;
+  bool _hasInternet = true;
 
   @override
   void initState() {
@@ -47,9 +48,12 @@ class _WallpaperState extends State<Wallpaper> {
           });
         },
       );
-    }   catch (e) {
+    } catch (e) {
       if (kDebugMode) {
         print(e.toString());
+        setState(() {
+          _hasInternet = false;
+        });
       }
     }
     setState(() {
@@ -149,6 +153,36 @@ class _WallpaperState extends State<Wallpaper> {
     });
   }
 
+  bool isNoImages() {
+    if (_isSearchScreen) {
+      return _searchedImages.isEmpty;
+    } else {
+      return _images.isEmpty;
+    }
+  }
+
+  Widget noImageMessage() {
+    String message;
+    if (!_hasInternet) {
+      message = 'No Internet Connection';
+    } else {
+      message = 'No result Found... Search something different';
+    }
+
+    return Expanded(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Text(
+            message,
+            style: const TextStyle(fontSize: 21),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) return const Center(child: CircularProgressIndicator());
@@ -163,7 +197,6 @@ class _WallpaperState extends State<Wallpaper> {
                     onPressed: () {
                       setState(() {
                         _isSearchScreen = false;
-
                         _searchedImages.clear();
                         _searchController.clear();
                       });
@@ -175,8 +208,10 @@ class _WallpaperState extends State<Wallpaper> {
                   ),
                 Expanded(
                   child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 8,
+                    ),
                     child: TextField(
                       controller: _searchController,
                       style: const TextStyle(
@@ -203,72 +238,76 @@ class _WallpaperState extends State<Wallpaper> {
                 ),
               ],
             ),
-            Expanded(
-              child: CustomScrollView(
-                slivers: [
-                  SliverPadding(
-                    padding: const EdgeInsets.all(5),
-                    sliver: SliverGrid(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => ImageScreen(
-                                  imageUrl: _searchedImages.isEmpty
-                                      ? _images[index]['src']['large2x']
-                                      : _searchedImages[index]['src']
-                                          ['large2x'],
-                                ),
-                              ));
-                            },
-                            child: Container(
-                              color: Colors.grey,
-                              child: Image.network(
-                                !_isSearchScreen
-                                    ? _images[index]['src']['tiny']
-                                    : _searchedImages[index]['src']['tiny'],
-                                fit: BoxFit.cover,
-                              ),
+            isNoImages()
+                ? noImageMessage()
+                : Expanded(
+                    child: CustomScrollView(
+                      slivers: [
+                        SliverPadding(
+                          padding: const EdgeInsets.all(5),
+                          sliver: SliverGrid(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) => ImageScreen(
+                                        imageUrl: _searchedImages.isEmpty
+                                            ? _images[index]['src']['large2x']
+                                            : _searchedImages[index]['src']
+                                                ['large2x'],
+                                      ),
+                                    ));
+                                  },
+                                  child: Container(
+                                    color: Colors.grey,
+                                    child: Image.network(
+                                      !_isSearchScreen
+                                          ? _images[index]['src']['tiny']
+                                          : _searchedImages[index]['src']
+                                              ['tiny'],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                );
+                              },
+                              childCount: !_isSearchScreen
+                                  ? _images.length
+                                  : _searchedImages.length,
                             ),
-                          );
-                        },
-                        childCount: !_isSearchScreen
-                            ? _images.length
-                            : _searchedImages.length,
-                      ),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 2,
-                        childAspectRatio: 2 / 3,
-                        mainAxisSpacing: 2,
-                      ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Center(
-                      child: TextButton(
-                        onPressed: () {
-                          if (_isSearchScreen) {
-                            _loadSearchMore(_searchController.text);
-                          } else {
-                            _loadMore();
-                          }
-                        },
-                        child: const Text(
-                          'Load more',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 2,
+                              childAspectRatio: 2 / 3,
+                              mainAxisSpacing: 2,
+                            ),
                           ),
                         ),
-                      ),
+                        SliverToBoxAdapter(
+                          child: Center(
+                            child: TextButton(
+                              onPressed: () {
+                                if (_isSearchScreen) {
+                                  _loadSearchMore(_searchController.text);
+                                } else {
+                                  _loadMore();
+                                }
+                              },
+                              child: const Text(
+                                'Load more',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
             if (_isLoadingMoreImages)
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 8),
