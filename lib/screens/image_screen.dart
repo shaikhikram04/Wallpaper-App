@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';
+import 'package:wallpaper_app/resource/download_service.dart';
 import 'package:wallpaper_app/widgets/bottom_button.dart';
 
 class ImageScreen extends StatefulWidget {
@@ -65,7 +66,7 @@ class _ImageScreenState extends State<ImageScreen> {
               const SizedBox(width: 8),
               Expanded(
                   child: BottomButton(
-                onTap: () {},
+                onTap: () => DownloadService().downloadImage(widget.imageUrl),
                 text: 'Download',
               ))
             ],
