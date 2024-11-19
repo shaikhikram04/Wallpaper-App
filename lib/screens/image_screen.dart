@@ -17,11 +17,21 @@ class ImageScreen extends StatefulWidget {
 }
 
 class _ImageScreenState extends State<ImageScreen> {
+  bool _isSettingWallpaper = false;
+  bool _isDownloadingWallpaper = false;
+
   Future<void> setWallpaper() async {
+    setState(() {
+      _isSettingWallpaper = true;
+    });
     final location = WallpaperManager.HOME_SCREEN;
     final file = await DefaultCacheManager().getSingleFile(widget.imageUrl);
     final result =
         await WallpaperManager.setWallpaperFromFile(file.path, location);
+
+    setState(() {
+      _isSettingWallpaper = false;
+    });
 
     if (!mounted) return;
 
@@ -43,6 +53,16 @@ class _ImageScreenState extends State<ImageScreen> {
     }
   }
 
+  Future<void> downloadWallpaper() async {
+    setState(() {
+      _isDownloadingWallpaper = true;
+    });
+    await DownloadService().downloadImage(widget.imageUrl);
+    setState(() {
+      _isDownloadingWallpaper = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,6 +81,7 @@ class _ImageScreenState extends State<ImageScreen> {
                 child: BottomButton(
                   onTap: setWallpaper,
                   text: 'Set Wallpaper',
+                  isLoading: _isSettingWallpaper,
                 ),
               ),
               Container(
@@ -70,8 +91,9 @@ class _ImageScreenState extends State<ImageScreen> {
               ),
               Expanded(
                   child: BottomButton(
-                onTap: () => DownloadService().downloadImage(widget.imageUrl),
+                onTap: downloadWallpaper,
                 text: 'Download',
+                isLoading: _isDownloadingWallpaper  ,
               ))
             ],
           ),

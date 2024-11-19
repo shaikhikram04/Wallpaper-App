@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 
 class BottomButton extends StatelessWidget {
-  const BottomButton({super.key, required this.onTap, required this.text});
+  const BottomButton({
+    super.key,
+    required this.onTap,
+    required this.text,
+    required this.isLoading,
+  });
 
   final void Function() onTap;
+  final bool isLoading;
   final String text;
 
   @override
@@ -18,13 +24,17 @@ class BottomButton extends StatelessWidget {
           border: Border.all(color: Colors.grey[900]!),
         ),
         child: Center(
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 20,
-              color: Colors.white,
-            ),
-          ),
+          child: isLoading
+              ? const CircularProgressIndicator(
+                  color: Colors.blueGrey,
+                )
+              : Text(
+                  text,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
         ),
       ),
     );
