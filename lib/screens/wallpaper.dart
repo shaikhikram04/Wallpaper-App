@@ -256,21 +256,27 @@ class _WallpaperState extends State<Wallpaper> {
                             _loadMore();
                           }
                         },
-                        child: _isLoadingMoreImages
-                            ? const CircularProgressIndicator()
-                            : const Text(
-                                'Load more',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                ),
-                              ),
+                        child: const Text(
+                          'Load more',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
+            if (_isLoadingMoreImages)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: LinearProgressIndicator(
+                  color: Colors.blueGrey,
+                  minHeight: 6,
+                ),
+              )
           ],
         ),
       ),
