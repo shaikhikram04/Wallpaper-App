@@ -16,9 +16,12 @@ class Wallpaper extends StatefulWidget {
 class _WallpaperState extends State<Wallpaper> {
   final List _images = [];
   int _page = 1;
+  int _searchPage = 1;
   final List _searchedImages = [];
   bool _isSearchScreen = false;
   late TextEditingController _searchController;
+  bool _isLoading = false;
+  bool _isLoadingMoreImages = false;
 
   @override
   void initState() {
@@ -28,6 +31,9 @@ class _WallpaperState extends State<Wallpaper> {
   }
 
   void _fetchApi() async {
+    setState(() {
+      _isLoading = true;
+    });
     try {
       await http.get(Uri.parse('https://api.pexels.com/v1/curated?per_page=80'),
           headers: {
@@ -46,46 +52,106 @@ class _WallpaperState extends State<Wallpaper> {
         print(e.toString());
       }
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void _fetchSearchApi(String query) async {
     setState(() {
       _isSearchScreen = true;
+      _isLoading = true;
     });
     query = query.trim().toLowerCase();
-    http.get(
-        Uri.parse('https://api.pexels.com/v1/search?query=$query&per_page=80'),
-        headers: {
-          'Authorization': dotenv.env['PEXEL_API_KEY']!,
-        }).then(
-      (value) {
-        Map result = jsonDecode(value.body);
-        _searchedImages.clear();
-        setState(() {
-          final List photos = result['photos'];
-          _searchedImages.addAll(photos);
-        });
-      },
-    );
+
+    try {
+      await http.get(
+          Uri.parse(
+              'https://api.pexels.com/v1/search?query=$query&per_page=80'),
+          headers: {
+            'Authorization': dotenv.env['PEXEL_API_KEY']!,
+          }).then(
+        (value) {
+          Map result = jsonDecode(value.body);
+          _searchedImages.clear();
+          setState(() {
+            final List photos = result['photos'];
+            _searchedImages.addAll(photos);
+          });
+        },
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
-  void _loadMore() {
+  Future<void> _loadMore() async {
     _page++;
+    setState(() {
+      _isLoadingMoreImages = true;
+    });
 
-    String url = 'https://api.pexels.com/v1/curated?per_page=80&page=$_page';
-    http.get(Uri.parse(url), headers: {
-      'Authorization': dotenv.env['PEXEL_API_KEY']!,
-    }).then((value) {
-      Map result = jsonDecode(value.body);
-      setState(() {
-        List photos = result['photos'];
-        _images.addAll(photos);
+    try {
+      String url = 'https://api.pexels.com/v1/curated?per_page=80&page=$_page';
+      await http.get(Uri.parse(url), headers: {
+        'Authorization': dotenv.env['PEXEL_API_KEY']!,
+      }).then((value) {
+        Map result = jsonDecode(value.body);
+        setState(() {
+          List photos = result['photos'];
+          _images.addAll(photos);
+        });
       });
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+
+    setState(() {
+      _isLoadingMoreImages = false;
+    });
+  }
+
+  void _loadSearchMore(String query) {
+    _searchPage++;
+    setState(() {
+      _isLoadingMoreImages = true;
+    });
+
+    try {
+      String url =
+          'https://api.pexels.com/v1/search?query=$query&per_page=80&page=$_searchPage';
+      http.get(Uri.parse(url), headers: {
+        'Authorization': dotenv.env['PEXEL_API_KEY']!,
+      }).then(
+        (value) {
+          Map result = jsonDecode(value.body);
+          setState(() {
+            List photos = result['photos'];
+            _searchedImages.addAll(photos);
+          });
+        },
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+
+    setState(() {
+      _isLoadingMoreImages = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) return const Center(child: CircularProgressIndicator());
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -184,15 +250,21 @@ class _WallpaperState extends State<Wallpaper> {
                     child: Center(
                       child: TextButton(
                         onPressed: () {
-                          _loadMore();
+                          if (_isSearchScreen) {
+                            _loadSearchMore(_searchController.text);
+                          } else {
+                            _loadMore();
+                          }
                         },
-                        child: const Text(
-                          'Load more',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                          ),
-                        ),
+                        child: _isLoadingMoreImages
+                            ? const CircularProgressIndicator()
+                            : const Text(
+                                'Load more',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
                       ),
                     ),
                   ),
