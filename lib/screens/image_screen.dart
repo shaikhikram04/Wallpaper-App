@@ -37,21 +37,22 @@ class _ImageScreenState extends State<ImageScreen> {
     if (!mounted) return;
 
     ScaffoldMessenger.of(context).clearSnackBars();
+    String message;
     if (result) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Wallpaper set successfully.'),
-          backgroundColor: Colors.grey[800],
-        ),
-      );
+      message = 'Wallpaper set successfully.';
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Failed to set wallpaper, please try again.'),
-          backgroundColor: Colors.grey[800],
-        ),
-      );
+      message = 'Failed to set wallpaper, please try again.';
     }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.grey[800],
+      ),
+    );
   }
 
   Future<void> downloadWallpaper() async {
