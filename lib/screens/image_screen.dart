@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';
@@ -77,23 +78,25 @@ class _ImageScreenState extends State<ImageScreen> {
           ),
           Row(
             children: [
-              Expanded(
-                child: BottomButton(
-                  onTap: setWallpaper,
-                  text: 'Set Wallpaper',
-                  isLoading: _isSettingWallpaper,
+              if (!kIsWeb)
+                Expanded(
+                  child: BottomButton(
+                    onTap: setWallpaper,
+                    text: 'Set Wallpaper',
+                    isLoading: _isSettingWallpaper,
+                  ),
                 ),
-              ),
-              Container(
-                color: Colors.white,
-                width: 1,
-                height: 60,
-              ),
+              if (!kIsWeb)
+                Container(
+                  color: Colors.white,
+                  width: 1,
+                  height: 60,
+                ),
               Expanded(
                   child: BottomButton(
                 onTap: downloadWallpaper,
                 text: 'Download',
-                isLoading: _isDownloadingWallpaper  ,
+                isLoading: _isDownloadingWallpaper,
               ))
             ],
           ),
