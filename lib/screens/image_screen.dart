@@ -62,6 +62,12 @@ class _ImageScreenState extends State<ImageScreen> {
                   text: 'Set Wallpaper',
                 ),
               ),
+              const SizedBox(width: 8),
+              Expanded(
+                  child: BottomButton(
+                onTap: () {},
+                text: 'Download',
+              ))
             ],
           ),
         ],
