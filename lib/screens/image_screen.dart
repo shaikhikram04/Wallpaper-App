@@ -36,7 +36,6 @@ class _ImageScreenState extends State<ImageScreen> {
 
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).clearSnackBars();
     String message;
     if (result) {
       message = 'Wallpaper set successfully.';
@@ -44,6 +43,30 @@ class _ImageScreenState extends State<ImageScreen> {
       message = 'Failed to set wallpaper, please try again.';
     }
 
+    showMessageSnackBar(message);
+  }
+
+  Future<void> downloadWallpaper() async {
+    setState(() {
+      _isDownloadingWallpaper = true;
+    });
+
+    String message;
+    try {
+      await DownloadService().downloadImage(widget.imageUrl);
+      message = 'Wallpaper Downloaded Successfully!';
+    } catch (e) {
+      message = 'Download Failed!';
+    }
+    setState(() {
+      _isDownloadingWallpaper = false;
+    });
+
+    showMessageSnackBar(message);
+  }
+
+  void showMessageSnackBar(String message) {
+    ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -53,16 +76,6 @@ class _ImageScreenState extends State<ImageScreen> {
         backgroundColor: Colors.grey[800],
       ),
     );
-  }
-
-  Future<void> downloadWallpaper() async {
-    setState(() {
-      _isDownloadingWallpaper = true;
-    });
-    await DownloadService().downloadImage(widget.imageUrl);
-    setState(() {
-      _isDownloadingWallpaper = false;
-    });
   }
 
   @override
