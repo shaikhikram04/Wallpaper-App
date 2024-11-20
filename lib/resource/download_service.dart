@@ -15,7 +15,7 @@ class DownloadService {
 
       if (kIsWeb) {
         // Web download implementation
-        _downloadWeb(imageBytes, imageUrl);
+        _downloadWeb(imageBytes, _extractFileName(imageUrl));
       } else if (Platform.isAndroid || Platform.isIOS) {
         // Mobile download implementation
         await _downloadMobile(imageBytes, _extractFileName(imageUrl));
@@ -27,9 +27,19 @@ class DownloadService {
   }
 
   void _downloadWeb(Uint8List bytes, String fileName) {
-    html.AnchorElement(href: fileName)
-      ..download = "image.jpg"
-      ..click();
+    // Ensure filename ends with .jpg
+    if (!fileName.toLowerCase().endsWith('.jpg') &&
+        !fileName.toLowerCase().endsWith('.jpeg')) {
+      fileName = '$fileName.jpg';
+    }
+
+    // Create blob with JPEG MIME type
+    final blob = html.Blob(
+      [bytes],
+      'image/jpeg', // Specify MIME type as JPEG
+    );
+
+    _downloadBlob(blob, fileName);
   }
 
   Future<void> _downloadMobile(Uint8List bytes, String fileName) async {
@@ -47,6 +57,22 @@ class DownloadService {
 
       print('Image downloaded at : ${directory?.path}');
     }
+  }
+
+  void _downloadBlob(html.Blob blob, String fileName) {
+    final url = html.Url.createObjectUrlFromBlob(blob);
+
+    final anchor = html.AnchorElement()
+      ..href = url
+      ..style.display = 'none'
+      ..download = fileName;
+
+    html.document.body?.children.add(anchor);
+    anchor.click();
+
+    // Cleanup
+    html.document.body?.children.remove(anchor);
+    html.Url.revokeObjectUrl(url);
   }
 
   String _extractFileName(String url) {

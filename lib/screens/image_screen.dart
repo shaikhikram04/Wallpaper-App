@@ -48,7 +48,7 @@ class _ImageScreenState extends State<ImageScreen> {
       SnackBar(
         content: Text(
           message,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.grey[800],
       ),
