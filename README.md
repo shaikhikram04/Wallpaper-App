@@ -17,17 +17,3 @@ A beautifully designed wallpaper application built using Flutter for mobile and 
 
 - **Download the Mobile App**:  
   [Download APK](./app_release/app-release.apk)
-
-
-## 🛠️ Technologies & Packages
-
-### **Technologies**
-- Flutter (Mobile & Web)
-- Pexels API
-
-### **Packages Used**
-- `http`: For API calls.
-- `flutter_dotenv`: To securely manage API keys.
-- `device_preview`: For simulating the app on different devices.
-- `url_launcher`: To open URLs.
-- `path_provider` & `image
