@@ -18,7 +18,7 @@ class DownloadService {
         _downloadWeb(imageBytes, _extractFileName(imageUrl));
       } else if (Platform.isAndroid || Platform.isIOS) {
         // Mobile download implementation
-        await _downloadMobile(imageBytes, _extractFileName(imageUrl));
+        await _downloadMobile(response, _extractFileName(imageUrl));
       }
     } catch (e) {
       print('Download error: $e');
@@ -42,20 +42,50 @@ class DownloadService {
     _downloadBlob(blob, fileName);
   }
 
-  Future<void> _downloadMobile(Uint8List bytes, String fileName) async {
-    // Request storage permission
-    if (await Permission.storage.request().isGranted) {
-      // Get external storage directory
-      final directory = await getExternalStorageDirectory();
-      final file = File('${directory?.path}/$fileName');
+  Future<void> _downloadMobile(http.Response response, String fileName) async {
+    try {
+      // Request storage permission
+      if (!await _requestPermission()) {
+        throw Exception('Storage permission denied');
+      }
 
-      // Write bytes to file
-      await file.writeAsBytes(bytes);
+      // Get the root directory path
+      Directory? root;
+      if (Platform.isAndroid) {
+        // This will give us /storage/emulated/0/
+        root = Directory('/storage/emulated/0/');
+      } else {
+        // For iOS, we'll use the documents directory
+        final appDir = await getApplicationDocumentsDirectory();
+        root = Directory(appDir.path);
+      }
 
-      // Optional: Show download complete notification
-      // You might use a package like flutter_local_notifications
+      // Create your custom directory at root level
+      final String customDirPath = '${root.path}/MyImages';
+      final Directory customDir = Directory(customDirPath);
 
-      print('Image downloaded at : ${directory?.path}');
+      // Create directory if it doesn't exist
+      if (!await customDir.exists()) {
+        await customDir.create(recursive: true);
+      }
+
+      // Download image
+      if (response.statusCode != 200) {
+        throw Exception('Failed to download image');
+      }
+
+      // Ensure file name has .jpg extension
+      final String fileNameWithExt =
+          fileName.toLowerCase().endsWith('.jpg') ? fileName : '$fileName.jpg';
+
+      // Create file path
+      final String filePath = '${customDir.path}/$fileNameWithExt';
+
+      // Save file
+      final File file = File(filePath);
+      await file.writeAsBytes(response.bodyBytes);
+    } catch (e) {
+      print(e.toString());
     }
   }
 
@@ -73,6 +103,19 @@ class DownloadService {
     // Cleanup
     html.document.body?.children.remove(anchor);
     html.Url.revokeObjectUrl(url);
+  }
+
+  Future<bool> _requestPermission() async {
+    if (Platform.isAndroid) {
+      final status = await Permission.storage.request();
+      if (status.isGranted) {
+        return true;
+      }
+    } else if (Platform.isIOS) {
+      // iOS doesn't need explicit permission for saving to app directory
+      return true;
+    }
+    return false;
   }
 
   String _extractFileName(String url) {
