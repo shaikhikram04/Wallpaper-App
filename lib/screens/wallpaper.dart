@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:wallpaper_app/screens/image_screen.dart';
+import 'package:wallpaper_app/utils/global_valiables.dart';
 
 class Wallpaper extends StatefulWidget {
   const Wallpaper({super.key});
@@ -185,58 +186,63 @@ class _WallpaperState extends State<Wallpaper> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     if (_isLoading) return const Center(child: CircularProgressIndicator());
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            Row(
-              children: [
-                if (_isSearchScreen)
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _isSearchScreen = false;
-                        _searchedImages.clear();
-                        _searchController.clear();
-                      });
-                    },
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                    ),
-                  ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 8,
-                    ),
-                    child: TextField(
-                      controller: _searchController,
-                      style: const TextStyle(
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: width > webScreenSize ? width * 0.23 : 0),
+              child: Row(
+                children: [
+                  if (_isSearchScreen)
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _isSearchScreen = false;
+                          _searchedImages.clear();
+                          _searchController.clear();
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back,
                         color: Colors.white,
-                        fontSize: 18,
                       ),
-                      onSubmitted: _fetchSearchApi,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[800],
-                        hintText: 'Search',
-                        hintStyle: TextStyle(color: Colors.grey[300]),
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(25)),
-                          borderSide: BorderSide.none,
-                        ),
-                        prefixIcon: const Icon(
-                          Icons.search,
+                    ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 8,
+                      ),
+                      child: TextField(
+                        controller: _searchController,
+                        style: const TextStyle(
                           color: Colors.white,
+                          fontSize: 18,
+                        ),
+                        onSubmitted: _fetchSearchApi,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.grey[800],
+                          hintText: 'Search',
+                          hintStyle: TextStyle(color: Colors.grey[300]),
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(25)),
+                            borderSide: BorderSide.none,
+                          ),
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             isNoImages()
                 ? noImageMessage()
@@ -276,13 +282,17 @@ class _WallpaperState extends State<Wallpaper> {
                                   ? _images.length
                                   : _searchedImages.length,
                             ),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 2,
-                              childAspectRatio: 2 / 3,
-                              mainAxisSpacing: 2,
-                            ),
+                            gridDelegate: width > webScreenSize
+                                ? const SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 300,
+                                    childAspectRatio: 0.9,
+                                  )
+                                : const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    crossAxisSpacing: 2,
+                                    childAspectRatio: 2 / 3,
+                                    mainAxisSpacing: 2,
+                                  ),
                           ),
                         ),
                         SliverToBoxAdapter(
