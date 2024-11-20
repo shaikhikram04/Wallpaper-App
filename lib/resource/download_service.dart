@@ -61,7 +61,7 @@ class DownloadService {
       }
 
       // Create your custom directory at root level
-      final String customDirPath = '${root.path}/MyImages';
+      final String customDirPath = '${root.path}/MyWallpapers';
       final Directory customDir = Directory(customDirPath);
 
       // Create directory if it doesn't exist
