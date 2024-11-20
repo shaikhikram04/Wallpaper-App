@@ -1,16 +1,33 @@
-# wallpaper_app
+# Flutter Wallpaper App 📱💻
 
-A new Flutter project.
+A beautifully designed wallpaper application built using Flutter for mobile and web platforms. The app integrates the [Pexels API](https://www.pexels.com/api/) to fetch stunning high-resolution wallpapers, allowing users to browse, search, and download their favorite wallpapers. On mobile devices, users can also directly set wallpapers as their device background.
 
-## Getting Started
+## ✨ Features
 
-This project is a starting point for a Flutter application.
+- **Cross-Platform Support**: Works seamlessly on both mobile and web.
+- **Dynamic Image Grid**: Displays a grid of wallpapers fetched from the Pexels API.
+- **Search Functionality**: Allows users to search for wallpapers based on their preferences.
+- **Wallpaper Details Screen**: Opens a detailed view of the selected wallpaper.
+- **Download Wallpaper**: Option to download wallpapers directly to the device.
+- **Set Wallpaper**: Mobile users can set wallpapers directly on their device (Android-only).
 
-A few resources to get you started if this is your first Flutter project:
+## 🌐 Try the App
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **Web Version**: [Flutter Wallpaper App (Web)](https://shaikhikram04.github.io/Wallpaper-App/)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **Download the Mobile App**:  
+  [Download APK](./app_release/app-release.apk)
+
+
+## 🛠️ Technologies & Packages
+
+### **Technologies**
+- Flutter (Mobile & Web)
+- Pexels API
+
+### **Packages Used**
+- `http`: For API calls.
+- `flutter_dotenv`: To securely manage API keys.
+- `device_preview`: For simulating the app on different devices.
+- `url_launcher`: To open URLs.
+- `path_provider` & `image
